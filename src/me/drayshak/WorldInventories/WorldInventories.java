@@ -258,7 +258,7 @@ public class WorldInventories extends JavaPlugin
         return new EnderChestHelper(playerInventory);        
     }
     
-    public PlayerInventoryHelper loadPlayerInventory(Player player, Group group)
+    public PlayerInventoryHelper loadPlayerInventory(OfflinePlayer player, Group group)
     {
         InventoriesLists playerInventory = null;
 
@@ -278,16 +278,15 @@ public class WorldInventories extends JavaPlugin
         if(!file.exists())
         {
             WorldInventories.logDebug("Player " + player.getName() + " will get a new item file on next save (clearing now).");
-            player.getInventory().clear();
             ItemStack[] armour = new ItemStack[4];
             for (int i = 0; i < 4; i++)
             {
                 armour[i] = new ItemStack(Material.AIR);
             }
 
-            player.getInventory().setArmorContents(armour);
+            ItemStack[] inventory = new ItemStack[36];
             
-            return new PlayerInventoryHelper(player.getInventory().getContents(), player.getInventory().getArmorContents());               
+            return new PlayerInventoryHelper(inventory, armour);
         }
         else
         {
@@ -299,7 +298,7 @@ public class WorldInventories extends JavaPlugin
         return new PlayerInventoryHelper(playerInventory);
     }
 
-    public PlayerStats loadPlayerStats(Player player, Group group)
+    public PlayerStats loadPlayerStats(OfflinePlayer player, Group group)
     {
         PlayerStats playerstats = null;
 
@@ -320,7 +319,6 @@ public class WorldInventories extends JavaPlugin
         {
             WorldInventories.logDebug("Player " + player.getName() + " will get a new stats file on next save (clearing now).");
             playerstats = new PlayerStats(20, 20, 0, 0, 0, 0F, null);
-            this.setPlayerStats(player, playerstats);            
         }
         else
         {
@@ -439,7 +437,7 @@ public class WorldInventories extends JavaPlugin
         MultiInvAPI mapi = new MultiInvAPI((MultiInv) pMultiInv);
         HashMap<String, String> mgroups = mapi.getGroups();
 
-        HashMap<String, Group> importgroups = new HashMap();
+        HashMap<String, Group> importgroups = new HashMap<String, Group>();
         for (String group : mgroups.values())
         {
             if(!importgroups.containsKey(group))
